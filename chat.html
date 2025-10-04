@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>n8n Chat</title>
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #chat-container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.umd.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      window.createChat({
+        webhookUrl: 'https://automationen.webdosis-projects.de/webhook/f406671e-c954-4691-b39a-66c90aa2f103/chat',
+        target: '#chat-container',
+        initialMessages: ['Hallo! Wie können wir dir helfen?'],
+        i18n: {
+          de: {
+            title: 'Willkommen bei AdsKing',
+            subtitle: '',
+            footer: 'Digitale Kundengewinnung mit KI',
+            getStarted: 'Neue Unterhaltung',
+            inputPlaceholder: 'Wie können wir dir helfen...',
+          },
+        },
+        defaultLanguage: 'de',
+        showButton: false,
+        buttonStyle: { display: 'none' }
+      });
+    });
+  </script>
+</body>
+</html>
