@@ -12,42 +12,90 @@
       height: 100%;
       overflow: hidden;
       background: #1e1e1e;
+      color: white;
+      font-family: Arial, sans-serif;
     }
     #chat-container {
       width: 100%;
       height: 100%;
     }
+    #debug {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      z-index: 9999;
+      max-width: 300px;
+    }
+    #debug-error {
+      color: #ff6b6b;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
+  <div id="debug">Status: Lade Skript...</div>
   <div id="chat-container"></div>
-  <!-- Skript mit onload-Event, um sicherzustellen, dass es vollständig geladen ist -->
-  <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.umd.js" onload="initChat()"></script>
 
   <script>
-    function initChat() {
+    // Debug-Log
+    console.log("Lade Skript...");
+    document.getElementById('debug').innerHTML = 'Status: Lade Skript...';
+
+    // Lade das Chat-Skript dynamisch
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.umd.js';
+    script.onload = function() {
+      document.getElementById('debug').innerHTML = 'Status: Skript geladen. Initialisiere Chat...';
+      console.log("Skript geladen. Initialisiere Chat...");
+
       if (window.createChat) {
-        window.createChat({
-          webhookUrl: 'https://automationen.webdosis-projects.de/webhook/f406671e-c954-4691-b39a-66c90aa2f103/chat',
-          target: '#chat-container',
-          initialMessages: ['Hallo! Wie können wir dir helfen?'],
-          i18n: {
-            de: {
-              title: 'Willkommen bei AdsKing',
-              subtitle: '',
-              footer: 'Digitale Kundengewinnung mit KI',
-              getStarted: 'Neue Unterhaltung',
-              inputPlaceholder: 'Wie können wir dir helfen...',
+        try {
+          window.createChat({
+            webhookUrl: 'https://automationen.webdosis-projects.de/webhook/f406671e-c954-4691-b39a-66c90aa2f103/chat',
+            target: '#chat-container',
+            initialMessages: ['Hallo! Wie können wir dir helfen?'],
+            i18n: {
+              de: {
+                title: 'Willkommen bei AdsKing',
+                subtitle: '',
+                footer: 'Digitale Kundengewinnung mit KI',
+                getStarted: 'Neue Unterhaltung',
+                inputPlaceholder: 'Wie können wir dir helfen...',
+              },
             },
-          },
-          defaultLanguage: 'de',
-          showButton: false,
-          buttonStyle: { display: 'none' }
-        });
+            defaultLanguage: 'de',
+            showButton: false,
+            buttonStyle: { display: 'none' },
+            onInit: function() {
+              document.getElementById('debug').innerHTML = 'Status: Chat initialisiert!';
+              console.log("Chat initialisiert!");
+            },
+            onError: function(error) {
+              document.getElementById('debug').innerHTML = `<span id="debug-error">FEHLER: ${error}</span>`;
+              console.error("Chat-Fehler:", error);
+            },
+            onMessage: function(message) {
+              console.log("Nachricht empfangen:", message);
+            }
+          });
+        } catch (error) {
+          document.getElementById('debug').innerHTML = `<span id="debug-error">FEHLER: ${error.message}</span>`;
+          console.error("Fehler bei der Initialisierung:", error);
+        }
       } else {
-        console.error('n8n Chat-Skript nicht geladen!');
+        document.getElementById('debug').innerHTML = '<span id="debug-error">FEHLER: createChat ist nicht verfügbar!</span>';
+        console.error('createChat ist nicht verfügbar!');
       }
-    }
+    };
+    script.onerror = function() {
+      document.getElementById('debug').innerHTML = '<span id="debug-error">FEHLER: Skript konnte nicht geladen werden!</span>';
+      console.error('Skript konnte nicht geladen werden!');
+    };
+    document.head.appendChild(script);
   </script>
 </body>
 </html>
