@@ -21,9 +21,11 @@
 </head>
 <body>
   <div id="chat-container"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.umd.js"></script>
+  <!-- Skript mit onload-Event, um sicherzustellen, dass es vollständig geladen ist -->
+  <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.umd.js" onload="initChat()"></script>
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    function initChat() {
       if (window.createChat) {
         window.createChat({
           webhookUrl: 'https://automationen.webdosis-projects.de/webhook/f406671e-c954-4691-b39a-66c90aa2f103/chat',
@@ -45,7 +47,7 @@
       } else {
         console.error('n8n Chat-Skript nicht geladen!');
       }
-    });
+    }
   </script>
 </body>
 </html>
